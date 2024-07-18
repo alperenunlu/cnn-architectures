@@ -29,7 +29,9 @@ import torchvision.tv_tensors as tv_tensors
 
 
 class AlexNet(nn.Module):
-    def __init__(self, num_classes: int = 1000, dropout: float = 0.5) -> None:
+    def __init__(
+        self, num_classes: int = 1000, dropout: float = 0.5, init_weights: bool = True
+    ) -> None:
         super().__init__()
 
         self.layer1 = nn.Sequential(
@@ -118,15 +120,18 @@ class AlexNet(nn.Module):
             nn.ReLU(inplace=True),  # ppr 3.1
         )
 
+        self.avgpool = nn.AdaptiveAvgPool2d((6, 6))
+
         # ppr 5
-        for m in self.modules():
-            if isinstance(m, (nn.Conv2d, nn.Linear)):
-                nn.init.normal_(m.weight, mean=0, std=0.01)
-                if m.bias is not None:
-                    nn.init.zeros_(m.bias)
-        nn.init.ones_(self.layer2[0].bias)
-        nn.init.ones_(self.layer4[0].bias)
-        nn.init.ones_(self.layer5[0].bias)
+        if init_weights:
+            for m in self.modules():
+                if isinstance(m, (nn.Conv2d, nn.Linear)):
+                    nn.init.normal_(m.weight, mean=0, std=0.01)
+                    if m.bias is not None:
+                        nn.init.zeros_(m.bias)
+            nn.init.ones_(self.layer2[0].bias)
+            nn.init.ones_(self.layer4[0].bias)
+            nn.init.ones_(self.layer5[0].bias)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.layer1(x)
@@ -134,6 +139,7 @@ class AlexNet(nn.Module):
         x = self.layer3(x)
         x = self.layer4(x)
         x = self.layer5(x)
+        x = self.avgpool(x)
         x = x.view(x.size(0), -1)
         x = self.layer6(x)
         x = self.layer7(x)
