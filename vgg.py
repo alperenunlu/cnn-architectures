@@ -10,13 +10,13 @@ import torchvision.transforms.v2 as T
 
 """
 @misc{simonyan2015deepconvolutionalnetworkslargescale,
-      title={Very Deep Convolutional Networks for Large-Scale Image Recognition}, 
+      title={Very Deep Convolutional Networks for Large-Scale Image Recognition},
       author={Karen Simonyan and Andrew Zisserman},
       year={2015},
       eprint={1409.1556},
       archivePrefix={arXiv},
       primaryClass={cs.CV},
-      url={https://arxiv.org/abs/1409.1556}, 
+      url={https://arxiv.org/abs/1409.1556},
 }
 """
 
@@ -25,9 +25,7 @@ import torchvision.transforms.v2 as T
 
 
 # ppr 2.1
-def make_vgg_layers(
-    config: List[Union[str, int]], batch_norm: Optional[bool] = False
-) -> nn.Sequential:
+def make_vgg_layers(config: List[Union[str, int]], batch_norm: Optional[bool] = False) -> nn.Sequential:
     """Create feature extraction layers for VGG architectures.
 
     This function creates a sequential container of layers based on the VGG architecture configuration.
@@ -50,7 +48,9 @@ def make_vgg_layers(
     for v in config:
         if isinstance(v, int):
             layers.append(
-                nn.Conv2d(in_channels, v, kernel_size=3, padding=1) #, bias=not batch_norm) # torch implementation convolutional layer has bias
+                nn.Conv2d(
+                    in_channels, v, kernel_size=3, padding=1
+                )  # , bias=not batch_norm) # torch implementation convolutional layer has bias
             )
             if batch_norm:
                 layers.append(nn.BatchNorm2d(v))
@@ -69,8 +69,8 @@ cfg: Dict[str, List[Union[str, int]]] = {
     "A": [64, "M", 128, "M", 256, 256, "M", 512, 512, "M", 512, 512, "M"],
     "B": [64, 64, "M", 128, 128, "M", 256, 256, "M", 512, 512, "M", 512, 512, "M"],
     # "C": [], # removed for simplicity
-    "D": [ 64, 64, "M", 128, 128, "M", 256, 256, 256, "M", 512, 512, 512, "M", 512, 512, 512, "M"],
-    "E": [ 64, 64, "M", 128, 128, "M", 256, 256, 256, 256, "M", 512, 512, 512, 512, "M", 512, 512, 512, 512, "M"],
+    "D": [64, 64, "M", 128, 128, "M", 256, 256, 256, "M", 512, 512, 512, "M", 512, 512, 512, "M"],
+    "E": [64, 64, "M", 128, 128, "M", 256, 256, 256, 256, "M", 512, 512, 512, 512, "M", 512, 512, 512, 512, "M"],
 }
 
 
@@ -115,75 +115,43 @@ class VGG(nn.Module):
 
 
 class VGG11(VGG):
-    def __init__(
-        self, num_classes: int = 1000, dropout: float = 0.5, init_weights: bool = True
-    ) -> None:
-        super().__init__(
-            make_vgg_layers(cfg["A"], False), num_classes, dropout, init_weights
-        )
+    def __init__(self, num_classes: int = 1000, dropout: float = 0.5, init_weights: bool = True) -> None:
+        super().__init__(make_vgg_layers(cfg["A"], False), num_classes, dropout, init_weights)
 
 
 class VGG11_BN(VGG):
-    def __init__(
-        self, num_classes: int = 1000, dropout: float = 0.5, init_weights: bool = True
-    ) -> None:
-        super().__init__(
-            make_vgg_layers(cfg["A"], True), num_classes, dropout, init_weights
-        )
+    def __init__(self, num_classes: int = 1000, dropout: float = 0.5, init_weights: bool = True) -> None:
+        super().__init__(make_vgg_layers(cfg["A"], True), num_classes, dropout, init_weights)
 
 
 class VGG13(VGG):
-    def __init__(
-        self, num_classes: int = 1000, dropout: float = 0.5, init_weights: bool = True
-    ) -> None:
-        super().__init__(
-            make_vgg_layers(cfg["B"], False), num_classes, dropout, init_weights
-        )
+    def __init__(self, num_classes: int = 1000, dropout: float = 0.5, init_weights: bool = True) -> None:
+        super().__init__(make_vgg_layers(cfg["B"], False), num_classes, dropout, init_weights)
 
 
 class VGG13_BN(VGG):
-    def __init__(
-        self, num_classes: int = 1000, dropout: float = 0.5, init_weights: bool = True
-    ) -> None:
-        super().__init__(
-            make_vgg_layers(cfg["B"], True), num_classes, dropout, init_weights
-        )
+    def __init__(self, num_classes: int = 1000, dropout: float = 0.5, init_weights: bool = True) -> None:
+        super().__init__(make_vgg_layers(cfg["B"], True), num_classes, dropout, init_weights)
 
 
 class VGG16(VGG):
-    def __init__(
-        self, num_classes: int = 1000, dropout: float = 0.5, init_weights: bool = True
-    ) -> None:
-        super().__init__(
-            make_vgg_layers(cfg["D"], False), num_classes, dropout, init_weights
-        )
+    def __init__(self, num_classes: int = 1000, dropout: float = 0.5, init_weights: bool = True) -> None:
+        super().__init__(make_vgg_layers(cfg["D"], False), num_classes, dropout, init_weights)
 
 
 class VGG16_BN(VGG):
-    def __init__(
-        self, num_classes: int = 1000, dropout: float = 0.5, init_weights: bool = True
-    ) -> None:
-        super().__init__(
-            make_vgg_layers(cfg["D"], True), num_classes, dropout, init_weights
-        )
+    def __init__(self, num_classes: int = 1000, dropout: float = 0.5, init_weights: bool = True) -> None:
+        super().__init__(make_vgg_layers(cfg["D"], True), num_classes, dropout, init_weights)
 
 
 class VGG19(VGG):
-    def __init__(
-        self, num_classes: int = 1000, dropout: float = 0.5, init_weights: bool = True
-    ) -> None:
-        super().__init__(
-            make_vgg_layers(cfg["E"], False), num_classes, dropout, init_weights
-        )
+    def __init__(self, num_classes: int = 1000, dropout: float = 0.5, init_weights: bool = True) -> None:
+        super().__init__(make_vgg_layers(cfg["E"], False), num_classes, dropout, init_weights)
 
 
 class VGG19_BN(VGG):
-    def __init__(
-        self, num_classes: int = 1000, dropout: float = 0.5, init_weights: bool = True
-    ) -> None:
-        super().__init__(
-            make_vgg_layers(cfg["E"], True), num_classes, dropout, init_weights
-        )
+    def __init__(self, num_classes: int = 1000, dropout: float = 0.5, init_weights: bool = True) -> None:
+        super().__init__(make_vgg_layers(cfg["E"], True), num_classes, dropout, init_weights)
 
 
 # Optimizer and Scheduler
@@ -194,9 +162,7 @@ MOMENTUM = 0.9
 WEIGHT_DECAY = 5e-4
 LEARNING_RATE = 0.01
 
-VGG_optimizer = partial(
-    optim.SGD, lr=LEARNING_RATE, momentum=MOMENTUM, weight_decay=WEIGHT_DECAY
-)
+VGG_optimizer = partial(optim.SGD, lr=LEARNING_RATE, momentum=MOMENTUM, weight_decay=WEIGHT_DECAY)
 
 VGG_scheduler = optim.lr_scheduler.ReduceLROnPlateau
 

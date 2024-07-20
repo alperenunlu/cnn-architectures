@@ -29,9 +29,7 @@ import torchvision.tv_tensors as tv_tensors
 
 
 class AlexNet(nn.Module):
-    def __init__(
-        self, num_classes: int = 1000, dropout: float = 0.5, init_weights: bool = True
-    ) -> None:
+    def __init__(self, num_classes: int = 1000, dropout: float = 0.5, init_weights: bool = True) -> None:
         super().__init__()
 
         self.layer1 = nn.Sequential(
@@ -156,9 +154,7 @@ MOMENTUM = 0.9
 WEIGHT_DECAY = 5e-4
 LEARNING_RATE = 0.01
 
-AlexNet_optimizer = partial(
-    optim.SGD, lr=LEARNING_RATE, momentum=MOMENTUM, weight_decay=WEIGHT_DECAY
-)
+AlexNet_optimizer = partial(optim.SGD, lr=LEARNING_RATE, momentum=MOMENTUM, weight_decay=WEIGHT_DECAY)
 AlexNet_scheduler = optim.lr_scheduler.ReduceLROnPlateau
 
 
